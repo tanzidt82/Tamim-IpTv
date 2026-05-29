@@ -1,11 +1,9 @@
-// =============== TAMIM TV v2.6 - ড্যাশবোর্ড স্টাইল ===============
+// =============== TAMIM TV v3.0 - সম্পূর্ণ ফাংশনাল ===============
 
 let channels = [];
 let currentChannelIndex = 0;
 let currentCategory = 'all';
 let currentSearchTerm = '';
-let isFloating = false;
-let originalParent = null;
 let recentChannels = JSON.parse(localStorage.getItem('recentChannels') || '[]');
 
 let currentPlaylistUrl = 'https://raw.githubusercontent.com/Rakib49/Rakibiptv/refs/heads/main/aynaott.m3u';
@@ -27,9 +25,9 @@ const video = document.getElementById('myVideo');
 const playPauseBtn = document.getElementById('playPauseBtn');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
+const seekBackBtn = document.getElementById('seekBackBtn');
+const seekForwardBtn = document.getElementById('seekForwardBtn');
 const fullscreenBtn = document.getElementById('fullscreenBtn');
-const floatBtn = document.getElementById('floatBtn');
-const closeFloatBtn = document.getElementById('closeFloatBtn');
 const channelListDiv = document.getElementById('channelList');
 const searchInput = document.getElementById('searchInput');
 const clearSearch = document.getElementById('clearSearch');
@@ -38,22 +36,18 @@ const channelCountSpan = document.getElementById('channelCount');
 const channelNameOverlay = document.getElementById('channelNameOverlay');
 const playerWrapper = document.getElementById('playerWrapper');
 const sidebar = document.getElementById('sidebar');
-const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+const menuToggle = document.getElementById('menuToggle');
 
-let totalViewsCount = 8923;
-let liveUsersCount = 128;
+let totalViewsCount = 9156;
+let liveUsersCount = 137;
 
 function updateStats() {
     liveUsersCount = Math.floor(Math.random() * (210 - 85 + 1) + 85);
     totalViewsCount += Math.floor(Math.random() * 25);
-    ['liveUsersTop', 'liveUsersStat'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.innerText = liveUsersCount;
-    });
-    ['totalViewsTop', 'totalViewsStat'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.innerText = totalViewsCount.toLocaleString();
-    });
+    document.getElementById('liveUsersTop').innerText = liveUsersCount;
+    document.getElementById('liveUsersStat').innerText = liveUsersCount;
+    document.getElementById('totalViewsTop').innerText = (totalViewsCount/1000).toFixed(1) + 'k';
+    document.getElementById('totalViewsStat').innerText = totalViewsCount.toLocaleString();
 }
 setInterval(updateStats, 8000);
 updateStats();
@@ -211,101 +205,18 @@ function togglePlay() {
     else { video.pause(); playPauseBtn.innerHTML = '<i class="fas fa-play"></i>'; }
 }
 
+function seekBack() {
+    video.currentTime = Math.max(0, video.currentTime - 10);
+}
+
+function seekForward() {
+    video.currentTime = Math.min(video.duration, video.currentTime + 10);
+}
+
 function toggleFullscreen() {
     if (!document.fullscreenElement) playerWrapper.requestFullscreen().catch(e=>console.log);
     else document.exitFullscreen();
 }
-
-// ফ্লোটিং ভিডিও - ড্র্যাগ ঠিক (বড় না হওয়া)
-function toggleFloating() {
-    if (!isFloating) {
-        originalParent = playerWrapper.parentNode;
-        document.body.appendChild(playerWrapper);
-        playerWrapper.classList.add('floating-video');
-        playerWrapper.style.position = 'fixed';
-        playerWrapper.style.bottom = '20px';
-        playerWrapper.style.right = '20px';
-        playerWrapper.style.width = '320px';
-        playerWrapper.style.height = 'auto';
-        isFloating = true;
-        floatBtn.innerHTML = '<i class="fas fa-window-minimize"></i>';
-        closeFloatBtn.style.display = 'flex';
-        enableDrag();
-    } else {
-        if (originalParent) originalParent.appendChild(playerWrapper);
-        playerWrapper.classList.remove('floating-video');
-        playerWrapper.style.position = '';
-        playerWrapper.style.width = '';
-        isFloating = false;
-        floatBtn.innerHTML = '<i class="fas fa-window-restore"></i>';
-        closeFloatBtn.style.display = 'none';
-        disableDrag();
-    }
-}
-
-function closeFloating() {
-    if (isFloating) {
-        if (originalParent) originalParent.appendChild(playerWrapper);
-        playerWrapper.classList.remove('floating-video');
-        playerWrapper.style.position = '';
-        isFloating = false;
-        floatBtn.innerHTML = '<i class="fas fa-window-restore"></i>';
-        closeFloatBtn.style.display = 'none';
-        disableDrag();
-    }
-}
-
-let dragActive = false, dragStartX, dragStartY;
-function enableDrag() {
-    playerWrapper.addEventListener('mousedown', onMouseDown);
-    playerWrapper.addEventListener('touchstart', onTouchStart);
-}
-function disableDrag() {
-    playerWrapper.removeEventListener('mousedown', onMouseDown);
-    playerWrapper.removeEventListener('touchstart', onTouchStart);
-}
-function onMouseDown(e) {
-    if (e.target.closest('.control-buttons')) return;
-    dragActive = true;
-    dragStartX = e.clientX - playerWrapper.offsetLeft;
-    dragStartY = e.clientY - playerWrapper.offsetTop;
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-}
-function onMouseMove(e) {
-    if (!dragActive) return;
-    let left = e.clientX - dragStartX;
-    let top = e.clientY - dragStartY;
-    left = Math.max(0, Math.min(window.innerWidth - playerWrapper.offsetWidth, left));
-    top = Math.max(0, Math.min(window.innerHeight - playerWrapper.offsetHeight, top));
-    playerWrapper.style.left = left + 'px';
-    playerWrapper.style.top = top + 'px';
-    playerWrapper.style.right = 'auto';
-    playerWrapper.style.bottom = 'auto';
-}
-function onMouseUp() { dragActive = false; document.removeEventListener('mousemove', onMouseMove); document.removeEventListener('mouseup', onMouseUp); }
-function onTouchStart(e) {
-    if (e.target.closest('.control-buttons')) return;
-    dragActive = true;
-    const touch = e.touches[0];
-    dragStartX = touch.clientX - playerWrapper.offsetLeft;
-    dragStartY = touch.clientY - playerWrapper.offsetTop;
-    document.addEventListener('touchmove', onTouchMove);
-    document.addEventListener('touchend', onTouchEnd);
-}
-function onTouchMove(e) {
-    if (!dragActive) return;
-    const touch = e.touches[0];
-    let left = touch.clientX - dragStartX;
-    let top = touch.clientY - dragStartY;
-    left = Math.max(0, Math.min(window.innerWidth - playerWrapper.offsetWidth, left));
-    top = Math.max(0, Math.min(window.innerHeight - playerWrapper.offsetHeight, top));
-    playerWrapper.style.left = left + 'px';
-    playerWrapper.style.top = top + 'px';
-    playerWrapper.style.right = 'auto';
-    playerWrapper.style.bottom = 'auto';
-}
-function onTouchEnd() { dragActive = false; document.removeEventListener('touchmove', onTouchMove); document.removeEventListener('touchend', onTouchEnd); }
 
 // 1.5 সেকেন্ডে কন্ট্রোল হাইড
 let hideTimeout;
@@ -356,13 +267,39 @@ function showPage(pageId) {
     if (window.innerWidth <= 768 && sidebar) sidebar.classList.remove('open');
 }
 
+// সেটিংস ফাংশন
+document.getElementById('volumeSlider')?.addEventListener('input', (e) => {
+    video.volume = e.target.value / 100;
+    document.getElementById('volumeValue').innerText = e.target.value + '%';
+});
+document.getElementById('darkModeToggle')?.addEventListener('change', (e) => {
+    if (!e.target.checked) document.body.classList.add('light-mode');
+    else document.body.classList.remove('light-mode');
+});
+document.getElementById('glassEffectToggle')?.addEventListener('change', (e) => {
+    const cards = document.querySelectorAll('.stat-card, .player-card, .settings-section, .channels-container');
+    cards.forEach(c => {
+        c.style.backdropFilter = e.target.checked ? 'blur(10px)' : 'none';
+    });
+});
+document.getElementById('updateM3U')?.addEventListener('click', () => {
+    const newUrl = document.getElementById('m3uUrl').value;
+    if (newUrl) {
+        currentPlaylistUrl = newUrl;
+        loadChannels();
+    }
+});
+document.getElementById('qualitySelect')?.addEventListener('change', (e) => {
+    console.log('Quality selected:', e.target.value);
+});
+
 // ইভেন্ট লিসেনার
 playPauseBtn.addEventListener('click', togglePlay);
 nextBtn.addEventListener('click', nextChannel);
 prevBtn.addEventListener('click', prevChannel);
+seekBackBtn.addEventListener('click', seekBack);
+seekForwardBtn.addEventListener('click', seekForward);
 fullscreenBtn.addEventListener('click', toggleFullscreen);
-floatBtn.addEventListener('click', toggleFloating);
-closeFloatBtn.addEventListener('click', closeFloating);
 if (searchInput) searchInput.addEventListener('input', handleSearch);
 if (clearSearch) clearSearch.addEventListener('click', clearSearchInput);
 video.addEventListener('play', () => playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>');
@@ -374,12 +311,12 @@ document.querySelectorAll('.cat-tab').forEach(btn => {
 document.querySelectorAll('.nav-item').forEach(nav => {
     nav.addEventListener('click', (e) => { e.preventDefault(); showPage(nav.dataset.page); });
 });
-if (mobileMenuToggle) {
-    mobileMenuToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+if (menuToggle) {
+    menuToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
 }
 document.addEventListener('click', (e) => {
     if (window.innerWidth <= 768 && sidebar && sidebar.classList.contains('open')) {
-        if (!sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+        if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
             sidebar.classList.remove('open');
         }
     }
