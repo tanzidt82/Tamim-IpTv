@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>TAMIM TV | প্রিমিয়াম আইপিটিভি</title>
+    <title>TAMIM TV</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
@@ -14,7 +14,7 @@
     <div class="sidebar" id="sidebar">
         <div class="logo">
             <i class="fas fa-tv"></i>
-            <span>TAMIM</span>
+            <span class="logo-text">TAMIM</span>
             <span class="badge">TV</span>
         </div>
         <div class="nav-menu">
@@ -30,17 +30,13 @@
                 <i class="fas fa-list-ul"></i>
                 <span>Channels</span>
             </a>
-            <a href="#" class="nav-item" data-page="settings">
-                <i class="fas fa-cog"></i>
-                <span>Settings</span>
-            </a>
         </div>
         <div class="bottom-info">
             <div class="stats-mini">
                 <div>📡 LIVE: <span id="liveUsersMini">128</span></div>
                 <div>👁️ VIEWS: <span id="totalViewsMini">8.9k</span></div>
             </div>
-            <div class="version">v2.1.0</div>
+            <div class="version">v2.5.0</div>
         </div>
     </div>
 
@@ -63,7 +59,6 @@
                 </div>
             </div>
             
-            <!-- স্ট্যাটস কার্ড -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon"><i class="fas fa-users"></i></div>
@@ -89,13 +84,12 @@
                 <div class="stat-card">
                     <div class="stat-icon"><i class="fas fa-clock"></i></div>
                     <div class="stat-info">
-                        <h3 id="uptimeStat">24/7</h3>
+                        <h3>24/7</h3>
                         <p>Uptime</p>
                     </div>
                 </div>
             </div>
 
-            <!-- সাম্প্রতিক চ্যানেল -->
             <div class="recent-section">
                 <h3><i class="fas fa-history"></i> Recently Played</h3>
                 <div class="recent-list" id="recentList"></div>
@@ -113,7 +107,7 @@
             <!-- প্লেয়ার -->
             <div class="player-card">
                 <div class="player-wrapper" id="playerWrapper">
-                    <video id="myVideo" poster="https://via.placeholder.com/1280x720/1a1d2b/3b82f6?text=TAMIM+TV">
+                    <video id="myVideo" poster="https://via.placeholder.com/1280x720/1a0a2e/9b59b6?text=TAMIM+TV">
                         <source src="" type="application/x-mpegURL">
                     </video>
                     <div class="video-controls-overlay" id="videoControls">
@@ -124,12 +118,12 @@
                             <button id="nextBtn"><i class="fas fa-step-forward"></i></button>
                             <button id="fullscreenBtn"><i class="fas fa-expand"></i></button>
                             <button id="floatBtn"><i class="fas fa-window-restore"></i></button>
+                            <button id="closeFloatBtn" style="display:none;"><i class="fas fa-times"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- সার্চ ও ক্যাটাগরি -->
             <div class="filter-bar">
                 <div class="search-input-wrapper">
                     <i class="fas fa-search"></i>
@@ -140,8 +134,8 @@
 
             <div class="category-tabs" id="categoryTabs">
                 <button class="cat-tab active" data-cat="all"><i class="fas fa-th-large"></i> All</button>
-                <button class="cat-tab" data-cat="bangla"><i class="fas fa-newspaper"></i> Bangla</button>
-                <button class="cat-tab" data-cat="indian"><i class="fas fa-film"></i> Indian</button>
+                <button class="cat-tab" data-cat="bangla"><i class="fas fa-newspaper"></i> Bangla News</button>
+                <button class="cat-tab" data-cat="indian"><i class="fas fa-film"></i> Indian Serial</button>
                 <button class="cat-tab" data-cat="sports"><i class="fas fa-futbol"></i> Sports</button>
                 <button class="cat-tab" data-cat="international"><i class="fas fa-globe"></i> International</button>
                 <button class="cat-tab" data-cat="entertainment"><i class="fas fa-music"></i> Entertainment</button>
@@ -150,7 +144,6 @@
                 <button class="cat-tab" data-cat="others"><i class="fas fa-ellipsis-h"></i> Others</button>
             </div>
 
-            <!-- চ্যানেল গ্রিড -->
             <div class="channels-grid-container">
                 <div class="channels-header">
                     <span><i class="fas fa-list"></i> Available Channels</span>
@@ -179,76 +172,6 @@
             </div>
         </div>
 
-        <!-- সেটিংস পেজ -->
-        <div id="settingsPage" class="page">
-            <div class="top-bar">
-                <div class="page-title">
-                    <h1><i class="fas fa-cog"></i> Settings</h1>
-                </div>
-            </div>
-            <div class="settings-container">
-                <div class="settings-section">
-                    <h3><i class="fas fa-play-circle"></i> Player Settings</h3>
-                    <div class="setting-item">
-                        <label>Auto Play</label>
-                        <label class="switch">
-                            <input type="checkbox" id="autoPlayToggle" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="setting-item">
-                        <label>Default Volume</label>
-                        <input type="range" id="volumeSlider" min="0" max="100" value="70">
-                        <span id="volumeValue">70%</span>
-                    </div>
-                    <div class="setting-item">
-                        <label>Video Quality</label>
-                        <select id="qualitySelect">
-                            <option value="auto">Auto</option>
-                            <option value="1080p">1080p</option>
-                            <option value="720p">720p</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="settings-section">
-                    <h3><i class="fas fa-palette"></i> Display Settings</h3>
-                    <div class="setting-item">
-                        <label>Dark Mode</label>
-                        <label class="switch">
-                            <input type="checkbox" id="darkModeToggle" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="setting-item">
-                        <label>Glass Effect</label>
-                        <label class="switch">
-                            <input type="checkbox" id="glassEffectToggle" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </div>
-                <div class="settings-section">
-                    <h3><i class="fas fa-database"></i> Stream Settings</h3>
-                    <div class="setting-item">
-                        <label>M3U Playlist URL</label>
-                        <input type="text" id="m3uUrl" value="https://raw.githubusercontent.com/Rakib49/Rakibiptv/refs/heads/main/aynaott.m3u" class="url-input">
-                        <button id="updateM3U" class="setting-btn">Update</button>
-                    </div>
-                    <div class="setting-item">
-                        <label>Buffer Time (seconds)</label>
-                        <input type="number" id="bufferTime" min="0" max="10" value="2" step="0.5">
-                    </div>
-                </div>
-                <div class="settings-section">
-                    <h3><i class="fas fa-info-circle"></i> About</h3>
-                    <p><strong>TAMIM TV</strong> v2.1.0</p>
-                    <p>Premium IPTV Dashboard with Glassmorphism UI</p>
-                    <p>© 2026 TAMIM TV</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- ফুটার -->
         <div class="dashboard-footer">
             <p>© 2026 TAMIM TV — Premium IPTV Dashboard</p>
         </div>
@@ -256,4 +179,4 @@
 
     <script src="script.js"></script>
 </body>
-                                               </html>
+                </html>
