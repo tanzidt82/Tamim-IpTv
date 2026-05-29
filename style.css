@@ -2,11 +2,11 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 body {
-    background: #0a0c12;
+    background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 100%);
     min-height: 100vh;
     overflow-x: hidden;
 }
@@ -14,8 +14,9 @@ body {
 /* ========== সাইডবার ========== */
 .sidebar {
     width: 260px;
-    background: #0f1119;
-    border-right: 1px solid rgba(59, 130, 246, 0.15);
+    background: rgba(26, 10, 46, 0.95);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(155, 89, 182, 0.3);
     position: fixed;
     height: 100vh;
     z-index: 100;
@@ -23,35 +24,41 @@ body {
 }
 
 @media (max-width: 768px) {
-    .sidebar {
-        transform: translateX(-100%);
-    }
-    .sidebar.open {
-        transform: translateX(0);
-    }
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
 }
 
 .logo {
-    padding: 20px;
+    padding: 25px 20px;
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 1.3rem;
-    font-weight: 700;
-    border-bottom: 1px solid rgba(59, 130, 246, 0.2);
-    color: #e2e8f0;
+    border-bottom: 1px solid rgba(155, 89, 182, 0.3);
 }
 
 .logo i {
-    color: #3b82f6;
+    font-size: 2rem;
+    color: #9b59b6;
+    text-shadow: 0 0 10px #9b59b6;
+}
+
+.logo-text {
+    font-family: 'Orbitron', monospace;
     font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fff, #9b59b6, #e74c3c);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
 .logo .badge {
-    background: #3b82f6;
+    background: #9b59b6;
     padding: 2px 8px;
     border-radius: 20px;
     font-size: 0.65rem;
+    font-weight: 600;
+    color: white;
 }
 
 .nav-menu {
@@ -67,15 +74,15 @@ body {
     gap: 14px;
     padding: 12px 16px;
     border-radius: 12px;
-    color: #8a8f9a;
+    color: #b8a0d4;
     text-decoration: none;
-    transition: 0.2s;
+    transition: 0.3s;
     font-weight: 500;
 }
 
-.nav-item i { width: 22px; }
-.nav-item.active { background: #1a1d2b; color: #3b82f6; border-left: 3px solid #3b82f6; }
-.nav-item:hover:not(.active) { background: #151a24; color: #e2e8f0; }
+.nav-item i { width: 22px; font-size: 1.2rem; }
+.nav-item.active { background: rgba(155, 89, 182, 0.3); color: #d4a0ff; border-left: 3px solid #9b59b6; }
+.nav-item:hover:not(.active) { background: rgba(155, 89, 182, 0.15); color: #fff; }
 
 .bottom-info {
     position: absolute;
@@ -86,24 +93,25 @@ body {
 }
 
 .stats-mini {
-    background: #1a1d2b;
+    background: rgba(155, 89, 182, 0.2);
     padding: 12px;
     border-radius: 12px;
     font-size: 0.75rem;
-    color: #8a8f9a;
+    color: #b8a0d4;
     margin-bottom: 12px;
 }
 
-.stats-mini span { color: #3b82f6; font-weight: 700; }
-.version { font-size: 0.65rem; color: #4a4f5e; text-align: center; }
+.stats-mini span { color: #d4a0ff; font-weight: 700; }
+.version { font-size: 0.65rem; color: #6a4a8a; text-align: center; }
 
-/* মোবাইল মেনু টগল */
+/* মোবাইল মেনু */
 .mobile-menu-toggle {
     position: fixed;
     top: 15px;
     left: 15px;
     z-index: 101;
-    background: #1a1d2b;
+    background: rgba(155, 89, 182, 0.3);
+    backdrop-filter: blur(10px);
     width: 45px;
     height: 45px;
     border-radius: 12px;
@@ -111,14 +119,12 @@ body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    border: 1px solid rgba(59, 130, 246, 0.3);
+    border: 1px solid rgba(155, 89, 182, 0.5);
 }
 
-.mobile-menu-toggle i { color: #3b82f6; font-size: 1.3rem; }
+.mobile-menu-toggle i { color: #d4a0ff; font-size: 1.3rem; }
 
-@media (max-width: 768px) {
-    .mobile-menu-toggle { display: flex; }
-}
+@media (max-width: 768px) { .mobile-menu-toggle { display: flex; } }
 
 /* ========== মূল কন্টেন্ট ========== */
 .main-content {
@@ -128,13 +134,9 @@ body {
 }
 
 @media (max-width: 768px) {
-    .main-content {
-        margin-left: 0;
-        padding: 70px 15px 20px;
-    }
+    .main-content { margin-left: 0; padding: 70px 15px 20px; }
 }
 
-/* পেজ */
 .page { display: none; }
 .page.active { display: block; }
 
@@ -151,10 +153,21 @@ body {
 .page-title h1 {
     font-size: 1.5rem;
     font-weight: 600;
-    color: #e2e8f0;
+    color: #e0c0ff;
 }
 
-.page-title h1 i { color: #3b82f6; margin-right: 10px; }
+.page-title h1 i { color: #9b59b6; margin-right: 10px; }
+
+.header-stats { display: flex; gap: 15px; }
+.stat-card-mini {
+    background: rgba(155, 89, 182, 0.2);
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    color: #b8a0d4;
+    border: 1px solid rgba(155, 89, 182, 0.3);
+}
+.stat-card-mini span { color: #d4a0ff; font-weight: 700; }
 
 /* স্ট্যাটস গ্রিড */
 .stats-grid {
@@ -165,68 +178,63 @@ body {
 }
 
 .stat-card {
-    background: #1a1d2b;
+    background: rgba(26, 10, 46, 0.7);
+    backdrop-filter: blur(10px);
     border-radius: 20px;
     padding: 20px;
     display: flex;
     align-items: center;
     gap: 15px;
-    border: 1px solid rgba(59, 130, 246, 0.15);
+    border: 1px solid rgba(155, 89, 182, 0.3);
+    transition: 0.3s;
 }
+
+.stat-card:hover { transform: translateY(-5px); border-color: #9b59b6; box-shadow: 0 10px 30px rgba(155, 89, 182, 0.3); }
 
 .stat-icon {
     width: 55px;
     height: 55px;
-    background: rgba(59, 130, 246, 0.15);
+    background: rgba(155, 89, 182, 0.2);
     border-radius: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.stat-icon i { font-size: 1.8rem; color: #3b82f6; }
+.stat-icon i { font-size: 1.8rem; color: #9b59b6; }
+.stat-info h3 { font-size: 1.8rem; color: #d4a0ff; }
+.stat-info p { color: #b8a0d4; font-size: 0.8rem; }
 
-.stat-info h3 { font-size: 1.8rem; color: #e2e8f0; }
-.stat-info p { color: #8a8f9a; font-size: 0.8rem; }
-
-/* রিসেন্ট সেকশন */
+/* রিসেন্ট */
 .recent-section {
-    background: #1a1d2b;
+    background: rgba(26, 10, 46, 0.7);
+    backdrop-filter: blur(10px);
     border-radius: 20px;
     padding: 20px;
-    border: 1px solid rgba(59, 130, 246, 0.15);
+    border: 1px solid rgba(155, 89, 182, 0.3);
 }
 
-.recent-section h3 {
-    color: #e2e8f0;
-    margin-bottom: 15px;
-    font-size: 1rem;
-}
-
-.recent-list {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
+.recent-section h3 { color: #d4a0ff; margin-bottom: 15px; font-size: 1rem; }
+.recent-list { display: flex; gap: 12px; flex-wrap: wrap; }
 .recent-item {
-    background: #0f1119;
+    background: rgba(155, 89, 182, 0.2);
     padding: 8px 15px;
     border-radius: 30px;
     font-size: 0.8rem;
-    color: #8a8f9a;
+    color: #b8a0d4;
     cursor: pointer;
     transition: 0.2s;
 }
-
-.recent-item:hover { background: #3b82f6; color: white; }
+.recent-item:hover { background: #9b59b6; color: white; }
 
 /* প্লেয়ার */
 .player-card {
-    background: #1a1d2b;
+    background: rgba(26, 10, 46, 0.7);
+    backdrop-filter: blur(10px);
     border-radius: 20px;
     padding: 15px;
     margin-bottom: 25px;
+    border: 1px solid rgba(155, 89, 182, 0.3);
 }
 
 .player-wrapper {
@@ -239,8 +247,10 @@ video {
     width: 100%;
     aspect-ratio: 16/9;
     background: #000;
+    border-radius: 12px;
 }
 
+/* ভিডিও কন্ট্রোল - 1.5 সেকেন্ডে হাইড */
 .video-controls-overlay {
     position: absolute;
     bottom: 0;
@@ -249,14 +259,18 @@ video {
     background: linear-gradient(transparent, rgba(0,0,0,0.9));
     padding: 20px 15px 15px;
     opacity: 0;
-    transition: 0.3s;
+    transition: opacity 0.3s;
+    pointer-events: none;
 }
 
 .player-wrapper:hover .video-controls-overlay,
-.video-controls-overlay.show { opacity: 1; }
+.video-controls-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
 
 .channel-name {
-    color: white;
+    color: #d4a0ff;
     font-size: 0.85rem;
     margin-bottom: 10px;
     background: rgba(0,0,0,0.6);
@@ -265,13 +279,9 @@ video {
     border-radius: 20px;
 }
 
-.control-buttons {
-    display: flex;
-    gap: 12px;
-}
-
+.control-buttons { display: flex; gap: 12px; }
 .control-buttons button {
-    background: rgba(255,255,255,0.15);
+    background: rgba(155, 89, 182, 0.6);
     border: none;
     width: 40px;
     height: 40px;
@@ -280,42 +290,29 @@ video {
     cursor: pointer;
     transition: 0.2s;
 }
+.control-buttons button:hover { background: #9b59b6; transform: scale(1.05); }
 
-.control-buttons button:hover { background: #3b82f6; transform: scale(1.05); }
-
-/* ফিল্টার বার */
-.filter-bar {
-    margin-bottom: 20px;
-}
-
+/* সার্চ ও ক্যাটাগরি */
+.filter-bar { margin-bottom: 20px; }
 .search-input-wrapper {
-    background: #1a1d2b;
+    background: rgba(26, 10, 46, 0.7);
     border-radius: 40px;
     padding: 10px 16px;
     display: flex;
     align-items: center;
     gap: 10px;
-    border: 1px solid rgba(59, 130, 246, 0.2);
+    border: 1px solid rgba(155, 89, 182, 0.3);
 }
-
 .search-input-wrapper input {
     flex: 1;
     background: transparent;
     border: none;
     outline: none;
-    color: #e2e8f0;
+    color: #d4a0ff;
 }
+.search-input-wrapper input::placeholder { color: #6a4a8a; }
+#clearSearch { background: transparent; border: none; color: #6a4a8a; cursor: pointer; }
 
-.search-input-wrapper input::placeholder { color: #5a5f6e; }
-
-#clearSearch {
-    background: transparent;
-    border: none;
-    color: #5a5f6e;
-    cursor: pointer;
-}
-
-/* ক্যাটাগরি ট্যাব */
 .category-tabs {
     display: flex;
     gap: 10px;
@@ -323,39 +320,39 @@ video {
     padding-bottom: 15px;
     margin-bottom: 20px;
 }
-
 .cat-tab {
-    background: #1a1d2b;
-    border: none;
+    background: rgba(26, 10, 46, 0.7);
+    border: 1px solid rgba(155, 89, 182, 0.3);
     padding: 8px 18px;
     border-radius: 30px;
-    color: #8a8f9a;
+    color: #b8a0d4;
     font-size: 0.75rem;
     cursor: pointer;
     white-space: nowrap;
     display: flex;
     align-items: center;
     gap: 6px;
+    transition: 0.2s;
 }
-
-.cat-tab.active { background: #3b82f6; color: white; }
+.cat-tab.active { background: #9b59b6; color: white; border-color: #9b59b6; }
+.cat-tab:hover:not(.active) { background: rgba(155, 89, 182, 0.4); }
 
 /* চ্যানেল গ্রিড */
 .channels-grid-container {
-    background: #1a1d2b;
+    background: rgba(26, 10, 46, 0.7);
+    backdrop-filter: blur(10px);
     border-radius: 20px;
     padding: 20px;
+    border: 1px solid rgba(155, 89, 182, 0.3);
 }
-
 .channels-header {
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
-    color: #8a8f9a;
+    color: #b8a0d4;
     font-size: 0.8rem;
 }
-
-.channel-count { color: #3b82f6; }
+.channel-count { color: #9b59b6; }
 
 .channel-grid {
     display: grid;
@@ -364,9 +361,8 @@ video {
     max-height: 450px;
     overflow-y: auto;
 }
-
 .channel-card {
-    background: #0f1119;
+    background: rgba(10, 5, 20, 0.6);
     padding: 10px;
     border-radius: 12px;
     display: flex;
@@ -374,156 +370,67 @@ video {
     gap: 10px;
     cursor: pointer;
     transition: 0.2s;
-    border: 1px solid rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(155, 89, 182, 0.2);
 }
-
-.channel-card i { font-size: 1.3rem; color: #3b82f6; }
+.channel-card i { font-size: 1.3rem; color: #9b59b6; }
 .channel-card img { width: 30px; height: 30px; border-radius: 8px; }
-.channel-card span { font-size: 0.75rem; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.channel-card:hover { background: #252a3a; transform: translateX(3px); }
-.channel-card.active { background: #1a2a4a; border-color: #3b82f6; }
-
-/* সেটিংস */
-.settings-container {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-}
-
-.settings-section {
-    background: #1a1d2b;
-    border-radius: 20px;
-    padding: 20px;
-    border: 1px solid rgba(59, 130, 246, 0.15);
-}
-
-.settings-section h3 {
-    color: #e2e8f0;
-    margin-bottom: 20px;
-    font-size: 1rem;
-}
-
-.setting-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(59, 130, 246, 0.1);
-}
-
-.setting-item label { color: #8a8f9a; font-size: 0.85rem; }
-
-/* টগল সুইচ */
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 24px;
-}
-
-.switch input { opacity: 0; width: 0; height: 0; }
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #3a3f50;
-    transition: 0.3s;
-    border-radius: 34px;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: 0.3s;
-    border-radius: 50%;
-}
-
-input:checked + .slider { background-color: #3b82f6; }
-input:checked + .slider:before { transform: translateX(26px); }
-
-.setting-item input[type="range"] {
-    width: 150px;
-    background: #3b82f6;
-    height: 4px;
-    border-radius: 5px;
-}
-
-.setting-item select {
-    background: #0f1119;
-    border: 1px solid rgba(59, 130, 246, 0.3);
-    padding: 6px 12px;
-    border-radius: 8px;
-    color: #e2e8f0;
-}
-
-.url-input {
-    flex: 1;
-    background: #0f1119;
-    border: 1px solid rgba(59, 130, 246, 0.3);
-    padding: 8px 12px;
-    border-radius: 8px;
-    color: #e2e8f0;
-    font-size: 0.7rem;
-}
-
-.setting-btn {
-    background: #3b82f6;
-    border: none;
-    padding: 8px 20px;
-    border-radius: 8px;
-    color: white;
-    cursor: pointer;
-}
+.channel-card span { font-size: 0.75rem; color: #d4a0ff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.channel-card:hover { background: rgba(155, 89, 182, 0.3); transform: translateX(3px); }
+.channel-card.active { background: rgba(155, 89, 182, 0.5); border-color: #9b59b6; }
 
 /* চ্যানেল ম্যানেজার */
-.channel-list-manager {
-    max-height: 400px;
-    overflow-y: auto;
-}
-
+.channel-list-manager { max-height: 400px; overflow-y: auto; }
 .manager-channel-item {
-    background: #0f1119;
+    background: rgba(10, 5, 20, 0.6);
     padding: 12px;
     border-radius: 12px;
     margin-bottom: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    cursor: pointer;
 }
-
 .manager-stats {
     display: flex;
     gap: 20px;
     margin-bottom: 20px;
     padding: 15px;
-    background: #0f1119;
+    background: rgba(155, 89, 182, 0.15);
     border-radius: 12px;
 }
+.manager-stat { color: #b8a0d4; }
+.manager-stat span { color: #9b59b6; font-weight: 700; }
 
-.manager-stat { color: #8a8f9a; font-size: 0.85rem; }
-.manager-stat span { color: #3b82f6; font-weight: 700; }
-
-/* ফ্লোটিং */
+/* ফ্লোটিং ভিডিও - ড্র্যাগ ঠিক করা */
 .floating-video {
     position: fixed !important;
     bottom: 20px !important;
     right: 20px !important;
-    width: 280px !important;
+    width: 320px !important;
     z-index: 1000 !important;
-    cursor: move;
+    cursor: grab;
     border-radius: 16px;
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+    box-shadow: 0 0 30px rgba(155, 89, 182, 0.8);
+    transition: none !important;
 }
+.floating-video:active { cursor: grabbing; }
+.floating-video video { border-radius: 12px; }
 
-.footer { text-align: center; padding: 20px; color: #4a4f5e; font-size: 0.7rem; }
-.loading { text-align: center; padding: 40px; color: #3b82f6; }
-.no-results { text-align: center; padding: 40px; color: #5a5f6e; grid-column: 1/-1; }
+/* ক্লোজ ফ্লোট বাটন */
+.floating-video #closeFloatBtn {
+    display: flex !important;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #e74c3c;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    z-index: 1001;
+}
+.floating-video .control-buttons { gap: 8px; }
+.floating-video .control-buttons button { width: 32px; height: 32px; font-size: 0.8rem; }
+
+.dashboard-footer { text-align: center; padding: 20px; color: #6a4a8a; font-size: 0.7rem; margin-top: 20px; }
+.loading { text-align: center; padding: 40px; color: #9b59b6; }
+.no-results { text-align: center; padding: 40px; color: #6a4a8a; grid-column: 1/-1; }
