@@ -15,7 +15,7 @@ body.light-mode {
     background: #f0f2f5;
 }
 
-/* ========== স্টিকি হেডার (স্ক্রল করলেও থাকবে) ========== */
+/* ========== স্টিকি হেডার ========== */
 .sticky-header {
     position: sticky;
     top: 0;
@@ -23,7 +23,7 @@ body.light-mode {
     right: 0;
     background: #0f122f;
     backdrop-filter: blur(20px);
-    padding: 14px 25px;
+    padding: 12px 25px;
     display: flex;
     align-items: center;
     z-index: 100;
@@ -45,6 +45,11 @@ body.light-mode .sticky-header {
     cursor: pointer;
     font-size: 1.4rem;
     color: #3b82f6;
+    transition: 0.2s;
+}
+
+.menu-icon:hover {
+    color: #60a5fa;
 }
 
 .logo {
@@ -70,7 +75,7 @@ body.light-mode .sticky-header {
 }
 
 .logo-badge {
-    background: #3b82f6;
+    background: linear-gradient(135deg, #3b82f6, #60a5fa);
     padding: 2px 8px;
     border-radius: 20px;
     font-size: 0.65rem;
@@ -127,8 +132,6 @@ body.light-mode .nav-item {
 .nav-item i { width: 22px; font-size: 1.1rem; }
 .nav-item.active { background: rgba(59, 130, 246, 0.2); color: #3b82f6; border-left: 3px solid #3b82f6; }
 .nav-item:hover:not(.active) { background: rgba(59, 130, 246, 0.1); color: #fff; }
-
-body.light-mode .nav-item:hover:not(.active) { background: rgba(59, 130, 246, 0.1); color: #1e293b; }
 
 .sidebar-footer {
     position: absolute;
@@ -265,6 +268,7 @@ video {
     aspect-ratio: 16/9;
     background: #000;
     border-radius: 12px;
+    cursor: pointer;
 }
 
 .video-controls-overlay {
@@ -295,18 +299,25 @@ video {
 }
 
 .control-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
-.control-buttons button {
-    background: rgba(59, 130, 246, 0.6);
-    border: none;
+
+.control-icon {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(59, 130, 246, 0.5);
     width: 45px;
-    height: 40px;
-    border-radius: 30px;
-    color: white;
+    height: 45px;
+    border-radius: 50%;
+    color: #3b82f6;
     cursor: pointer;
     transition: 0.2s;
-    font-size: 0.8rem;
+    font-size: 1rem;
 }
-.control-buttons button:hover { background: #3b82f6; transform: scale(1.05); }
+
+.control-icon:hover {
+    background: #3b82f6;
+    color: white;
+    transform: scale(1.05);
+    border-color: #3b82f6;
+}
 
 /* সার্চ */
 .search-box {
@@ -355,9 +366,11 @@ body.light-mode .search-box input { color: #1e293b; }
     display: flex;
     align-items: center;
     gap: 6px;
+    transition: 0.2s;
 }
 body.light-mode .cat-tab { background: #ffffff; }
 .cat-tab.active { background: #3b82f6; color: white; border-color: #3b82f6; }
+.cat-tab:hover:not(.active) { background: rgba(59, 130, 246, 0.2); }
 
 /* চ্যানেল */
 .channels-container {
@@ -393,6 +406,7 @@ body.light-mode .channels-container { background: #ffffff; }
     gap: 10px;
     cursor: pointer;
     border: 1px solid rgba(59, 130, 246, 0.2);
+    transition: 0.2s;
 }
 body.light-mode .channel-card { background: #f8fafc; }
 .channel-card i { font-size: 1.3rem; color: #3b82f6; }
@@ -430,22 +444,9 @@ body.light-mode .settings-section h3 { color: #1e293b; }
     border-radius: 8px;
     color: #e2e8f0;
 }
-.url-input {
-    flex: 1;
-    background: #0f122f;
-    border: 1px solid rgba(59, 130, 246, 0.3);
-    padding: 8px 12px;
-    border-radius: 8px;
-    color: #e2e8f0;
-    font-size: 0.7rem;
-}
-.setting-btn {
-    background: #3b82f6;
-    border: none;
-    padding: 8px 20px;
-    border-radius: 8px;
-    color: white;
-    cursor: pointer;
+body.light-mode .setting-item select {
+    background: #ffffff;
+    color: #1e293b;
 }
 
 /* টগল সুইচ */
@@ -503,7 +504,9 @@ input:checked + .slider:before { transform: translateX(26px); }
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
+    transition: 0.2s;
 }
+.manager-channel-item:hover { background: rgba(59, 130, 246, 0.2); }
 
 .footer { text-align: center; padding: 20px; color: #4a5a7a; font-size: 0.7rem; margin-top: 20px; }
 .loading { text-align: center; padding: 40px; color: #3b82f6; }
