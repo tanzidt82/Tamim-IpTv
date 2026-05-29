@@ -10,20 +10,25 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
 <body>
-    <!-- হেডারে লোগো (3 লাইনের জায়গায়) -->
+    <!-- হেডার (3 লাইনের সাথে লোগো) -->
     <div class="top-header">
-        <div class="header-logo">
-            <i class="fas fa-tv"></i>
-            <span class="logo-main">TAMIM</span>
-            <span class="logo-badge">TV</span>
+        <div class="menu-logo">
+            <div class="menu-icon" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="header-logo">
+                <i class="fas fa-tv"></i>
+                <span class="logo-main">TAMIM</span>
+                <span class="logo-badge">TV</span>
+            </div>
         </div>
         <div class="header-stats">
-            <div class="header-stat"><i class="fas fa-circle live-dot"></i> <span id="liveUsersTop">128</span> LIVE</div>
-            <div class="header-stat"><i class="fas fa-eye"></i> <span id="totalViewsTop">8.9k</span> VIEWS</div>
+            <div class="header-stat"><i class="fas fa-circle live-dot"></i> <span id="liveUsersTop">137</span> LIVE</div>
+            <div class="header-stat"><i class="fas fa-eye"></i> <span id="totalViewsTop">9.1k</span> VIEWS</div>
         </div>
     </div>
 
-    <!-- সাইডবার (পাশের মেনু) -->
+    <!-- সাইডবার -->
     <div class="sidebar" id="sidebar">
         <div class="nav-menu">
             <a href="#" class="nav-item active" data-page="dashboard">
@@ -38,15 +43,14 @@
                 <i class="fas fa-list-ul"></i>
                 <span>Channel Manager</span>
             </a>
+            <a href="#" class="nav-item" data-page="settings">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
         </div>
         <div class="sidebar-footer">
-            <div class="version">v2.5.0</div>
+            <div class="version">v3.0.0</div>
         </div>
-    </div>
-
-    <!-- মোবাইলের জন্য মেনু টগল -->
-    <div class="mobile-menu-toggle" id="mobileMenuToggle">
-        <i class="fas fa-bars"></i>
     </div>
 
     <!-- মূল কন্টেন্ট -->
@@ -61,14 +65,14 @@
                 <div class="stat-card">
                     <div class="stat-icon"><i class="fas fa-users"></i></div>
                     <div class="stat-info">
-                        <h3 id="liveUsersStat">128</h3>
+                        <h3 id="liveUsersStat">137</h3>
                         <p>Live Users</p>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon"><i class="fas fa-eye"></i></div>
                     <div class="stat-info">
-                        <h3 id="totalViewsStat">8,923</h3>
+                        <h3 id="totalViewsStat">9,156</h3>
                         <p>Total Views</p>
                     </div>
                 </div>
@@ -112,9 +116,9 @@
                             <button id="prevBtn"><i class="fas fa-step-backward"></i></button>
                             <button id="playPauseBtn"><i class="fas fa-play"></i></button>
                             <button id="nextBtn"><i class="fas fa-step-forward"></i></button>
+                            <button id="seekBackBtn"><i class="fas fa-backward"></i> 10</button>
+                            <button id="seekForwardBtn">10 <i class="fas fa-forward"></i></button>
                             <button id="fullscreenBtn"><i class="fas fa-expand"></i></button>
-                            <button id="floatBtn"><i class="fas fa-window-restore"></i></button>
-                            <button id="closeFloatBtn" style="display:none;"><i class="fas fa-times"></i></button>
                         </div>
                     </div>
                 </div>
@@ -162,6 +166,70 @@
                 <div class="manager-stat">Categories: 8</div>
             </div>
             <div class="channel-list-manager" id="channelManagerList"></div>
+        </div>
+
+        <!-- সেটিংস পেজ -->
+        <div id="settingsPage" class="page">
+            <div class="page-header">
+                <h1><i class="fas fa-cog"></i> Settings</h1>
+            </div>
+            <div class="settings-container">
+                <div class="settings-section">
+                    <h3><i class="fas fa-play-circle"></i> Player Settings</h3>
+                    <div class="setting-item">
+                        <label>Default Volume</label>
+                        <input type="range" id="volumeSlider" min="0" max="100" value="70">
+                        <span id="volumeValue">70%</span>
+                    </div>
+                    <div class="setting-item">
+                        <label>Video Quality</label>
+                        <select id="qualitySelect">
+                            <option value="auto">Auto</option>
+                            <option value="1080p">1080p</option>
+                            <option value="720p">720p</option>
+                            <option value="480p">480p</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label>Auto Play Next</label>
+                        <label class="switch">
+                            <input type="checkbox" id="autoNextToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3><i class="fas fa-palette"></i> Display Settings</h3>
+                    <div class="setting-item">
+                        <label>Dark Mode</label>
+                        <label class="switch">
+                            <input type="checkbox" id="darkModeToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>Glass Effect</label>
+                        <label class="switch">
+                            <input type="checkbox" id="glassEffectToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3><i class="fas fa-database"></i> Stream Settings</h3>
+                    <div class="setting-item">
+                        <label>M3U Playlist URL</label>
+                        <input type="text" id="m3uUrl" value="https://raw.githubusercontent.com/Rakib49/Rakibiptv/refs/heads/main/aynaott.m3u" class="url-input">
+                        <button id="updateM3U" class="setting-btn">Update</button>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3><i class="fas fa-info-circle"></i> About</h3>
+                    <p><strong>TAMIM TV</strong> v3.0.0</p>
+                    <p>Premium IPTV Dashboard with Glassmorphism UI</p>
+                    <p>© 2026 TAMIM TV</p>
+                </div>
+            </div>
         </div>
 
         <div class="footer">
