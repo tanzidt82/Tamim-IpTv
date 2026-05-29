@@ -1,4 +1,4 @@
-// =============== TAMIM TV v2.5 - প্রিমিয়াম বেগুনী থিম ===============
+// =============== TAMIM TV v2.6 - ড্যাশবোর্ড স্টাইল ===============
 
 let channels = [];
 let currentChannelIndex = 0;
@@ -6,21 +6,20 @@ let currentCategory = 'all';
 let currentSearchTerm = '';
 let isFloating = false;
 let originalParent = null;
-let floatTimeout = null;
 let recentChannels = JSON.parse(localStorage.getItem('recentChannels') || '[]');
 
 let currentPlaylistUrl = 'https://raw.githubusercontent.com/Rakib49/Rakibiptv/refs/heads/main/aynaott.m3u';
 
-// ক্যাটাগরি ম্যাপিং (ঠিক করে দেওয়া)
+// ক্যাটাগরি ম্যাপিং
 const categoryMap = {
-    'bangla': ['সময়', 'চ্যানেল আই', 'এটিএন', 'এনটিভি', 'বিবিসি বাংলা', 'দীপ্ত', 'বাংলাভিশন', 'ইন্ডিপেন্ডেন্ট', 'বৈশাখী', 'আমার টিভি', 'দেখো', 'বাংলা', 'নিউজ বাংলা'],
-    'indian': ['স্টার প্লাস', 'জি বাংলা', 'কালারস', 'সনি', 'এন্ড টিভি', 'ইমাজিন', 'স্টার জলসা', 'কালার্স', 'সনি টিভি', 'জি টিভি', 'ইন্ডিয়ান'],
-    'sports': ['স্পোর্টস', 'ক্রিকেট', 'ফুটবল', 'টি স্পোর্টস', 'ইএসপিএন', 'স্টার স্পোর্টস', 'টেন স্পোর্টস', 'স্পোর্টস ২৪', 'স্পোর্টস লাইভ'],
-    'international': ['সিএনএন', 'বিবিসি', 'স্কাই নিউজ', 'আল জাজিরা', 'ফ্রান্স ২৪', 'এনবিসি', 'ফক্স', 'সিএনবিসি', 'ইন্টারন্যাশনাল'],
-    'entertainment': ['মিউজিক', 'বিনোদন', 'গান', 'সঙ্গীত', 'ডিজে', 'রেডিও', 'এন্টারটেইনমেন্ট', 'মিউজিক ভিডিও'],
-    'movies': ['সিনেমা', 'মুভি', 'হলিউড', 'বলিউড', 'ঢালিউড', 'ফিল্ম', 'মুভি চ্যানেল'],
-    'news': ['নিউজ', 'সংবাদ', 'বার্তা', 'আপডেট', 'ব্রেকিং', 'টক শো', 'সংবাদ চ্যানেল'],
-    'others': ['লাইফস্টাইল', 'ট্রাভেল', 'কিডস', 'ডকুমেন্টরি', 'শিক্ষা', 'স্বাস্থ্য', 'লাইফ']
+    'bangla': ['সময়', 'চ্যানেল আই', 'এটিএন', 'এনটিভি', 'বিবিসি বাংলা', 'দীপ্ত', 'বাংলাভিশন', 'ইন্ডিপেন্ডেন্ট', 'বৈশাখী', 'আমার টিভি', 'দেখো'],
+    'indian': ['স্টার প্লাস', 'জি বাংলা', 'কালারস', 'সনি', 'এন্ড টিভি', 'ইমাজিন', 'স্টার জলসা', 'কালার্স', 'জি টিভি'],
+    'sports': ['স্পোর্টস', 'ক্রিকেট', 'ফুটবল', 'টি স্পোর্টস', 'ইএসপিএন', 'স্টার স্পোর্টস', 'টেন স্পোর্টস', 'স্পোর্টস ২৪'],
+    'international': ['সিএনএন', 'বিবিসি', 'স্কাই নিউজ', 'আল জাজিরা', 'এনবিসি', 'ফক্স', 'সিএনবিসি'],
+    'entertainment': ['মিউজিক', 'বিনোদন', 'গান', 'সঙ্গীত', 'ডিজে', 'রেডিও', 'এন্টারটেইনমেন্ট'],
+    'movies': ['সিনেমা', 'মুভি', 'হলিউড', 'বলিউড', 'ঢালিউড', 'ফিল্ম'],
+    'news': ['নিউজ', 'সংবাদ', 'বার্তা', 'আপডেট', 'ব্রেকিং', 'টক শো'],
+    'others': ['লাইফস্টাইল', 'ট্রাভেল', 'কিডস', 'ডকুমেন্টরি', 'শিক্ষা', 'স্বাস্থ্য']
 };
 
 // ডোম এলিমেন্টস
@@ -41,18 +40,17 @@ const playerWrapper = document.getElementById('playerWrapper');
 const sidebar = document.getElementById('sidebar');
 const mobileMenuToggle = document.getElementById('mobileMenuToggle');
 
-// স্ট্যাটস আপডেট
 let totalViewsCount = 8923;
 let liveUsersCount = 128;
 
 function updateStats() {
     liveUsersCount = Math.floor(Math.random() * (210 - 85 + 1) + 85);
     totalViewsCount += Math.floor(Math.random() * 25);
-    ['liveUsersMini', 'liveUsersHeader', 'liveUsersStat'].forEach(id => {
+    ['liveUsersTop', 'liveUsersStat'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.innerText = liveUsersCount;
     });
-    ['totalViewsMini', 'totalViewsHeader', 'totalViewsStat'].forEach(id => {
+    ['totalViewsTop', 'totalViewsStat'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.innerText = totalViewsCount.toLocaleString();
     });
@@ -108,8 +106,6 @@ function setBackupChannels() {
         { name: "স্টার স্পোর্টস", url: "https://cdn3.wowza.com/1/8HNCWUg5bG9lL2g0/ODBweGJn/hls/live/playlist.m3u8", logo: "", category: "sports" },
         { name: "টি স্পোর্টস", url: "https://dhakaiptv.com/live/tsports/index.m3u8", logo: "", category: "sports" },
         { name: "সিএনএন", url: "https://live.cnn.com/hls/cnn.m3u8", logo: "", category: "international" },
-        { name: "ন্যাশনাল জিও", url: "https://edge21.cdn.bg/ngcint/smil:ngcint.smil/playlist.m3u8", logo: "", category: "others" },
-        { name: "ডিসকভারি", url: "https://edge21.cdn.bg/discovery/smil:discovery.smil/playlist.m3u8", logo: "", category: "others" },
         { name: "জি বাংলা", url: "https://dhakaiptv.com/live/zeebangla/index.m3u8", logo: "", category: "indian" }
     ];
     renderChannels();
@@ -136,7 +132,7 @@ function renderChannels() {
         const card = document.createElement('div');
         card.className = 'channel-card';
         if (origIdx === currentChannelIndex) card.classList.add('active');
-        if (ch.logo) card.innerHTML = `<img src="${ch.logo}" onerror="this.src='https://via.placeholder.com/30/9b59b6?text=TV'"><span>${ch.name.substring(0, 22)}</span>`;
+        if (ch.logo) card.innerHTML = `<img src="${ch.logo}" onerror="this.src='https://via.placeholder.com/30/3b82f6?text=TV'"><span>${ch.name.substring(0, 22)}</span>`;
         else card.innerHTML = `<i class="fas fa-tv"></i><span>${ch.name.substring(0, 22)}</span>`;
         card.onclick = () => playChannel(origIdx);
         channelListDiv.appendChild(card);
@@ -220,7 +216,7 @@ function toggleFullscreen() {
     else document.exitFullscreen();
 }
 
-// ফ্লোটিং ভিডিও - ড্র্যাগ ঠিক করা + ক্লোজ বাটন
+// ফ্লোটিং ভিডিও - ড্র্যাগ ঠিক (বড় না হওয়া)
 function toggleFloating() {
     if (!isFloating) {
         originalParent = playerWrapper.parentNode;
@@ -230,6 +226,7 @@ function toggleFloating() {
         playerWrapper.style.bottom = '20px';
         playerWrapper.style.right = '20px';
         playerWrapper.style.width = '320px';
+        playerWrapper.style.height = 'auto';
         isFloating = true;
         floatBtn.innerHTML = '<i class="fas fa-window-minimize"></i>';
         closeFloatBtn.style.display = 'flex';
@@ -251,7 +248,6 @@ function closeFloating() {
         if (originalParent) originalParent.appendChild(playerWrapper);
         playerWrapper.classList.remove('floating-video');
         playerWrapper.style.position = '';
-        playerWrapper.style.width = '';
         isFloating = false;
         floatBtn.innerHTML = '<i class="fas fa-window-restore"></i>';
         closeFloatBtn.style.display = 'none';
@@ -259,7 +255,7 @@ function closeFloating() {
     }
 }
 
-let dragActive = false, dragStartX, dragStartY, startLeft, startTop;
+let dragActive = false, dragStartX, dragStartY;
 function enableDrag() {
     playerWrapper.addEventListener('mousedown', onMouseDown);
     playerWrapper.addEventListener('touchstart', onTouchStart);
@@ -267,10 +263,6 @@ function enableDrag() {
 function disableDrag() {
     playerWrapper.removeEventListener('mousedown', onMouseDown);
     playerWrapper.removeEventListener('touchstart', onTouchStart);
-    document.removeEventListener('mousemove', onMouseMove);
-    document.removeEventListener('mouseup', onMouseUp);
-    document.removeEventListener('touchmove', onTouchMove);
-    document.removeEventListener('touchend', onTouchEnd);
 }
 function onMouseDown(e) {
     if (e.target.closest('.control-buttons')) return;
@@ -354,7 +346,7 @@ function showPage(pageId) {
             channels.forEach((ch, idx) => {
                 const div = document.createElement('div');
                 div.className = 'manager-channel-item';
-                div.innerHTML = `<span><i class="fas fa-tv"></i> ${ch.name.substring(0, 30)}</span><span style="color:#9b59b6">${ch.category}</span>`;
+                div.innerHTML = `<span><i class="fas fa-tv"></i> ${ch.name.substring(0, 35)}</span><span style="color:#3b82f6">${ch.category}</span>`;
                 div.onclick = () => { showPage('live'); playChannel(idx); };
                 container.appendChild(div);
             });
