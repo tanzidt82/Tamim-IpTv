@@ -2,35 +2,35 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>TAMIM TV | IPTV Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>TAMIM TV | প্রিমিয়াম আইপিটিভি</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
 <body>
-    <!-- সাইডবার (স্ক্রিনশটের মতো) -->
-    <div class="sidebar">
+    <!-- সাইডবার -->
+    <div class="sidebar" id="sidebar">
         <div class="logo">
             <i class="fas fa-tv"></i>
             <span>TAMIM</span>
             <span class="badge">TV</span>
         </div>
         <div class="nav-menu">
-            <a href="#" class="nav-item active">
+            <a href="#" class="nav-item active" data-page="dashboard">
                 <i class="fas fa-tachometer-alt"></i>
                 <span>Dashboard</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="#" class="nav-item" data-page="live">
                 <i class="fas fa-play-circle"></i>
                 <span>Live TV</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="#" class="nav-item" data-page="channels">
                 <i class="fas fa-list-ul"></i>
                 <span>Channels</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="#" class="nav-item" data-page="settings">
                 <i class="fas fa-cog"></i>
                 <span>Settings</span>
             </a>
@@ -40,82 +40,211 @@
                 <div>📡 LIVE: <span id="liveUsersMini">128</span></div>
                 <div>👁️ VIEWS: <span id="totalViewsMini">8.9k</span></div>
             </div>
-            <div class="version">v2.0.1</div>
+            <div class="version">v2.1.0</div>
         </div>
+    </div>
+
+    <!-- মোবাইলের জন্য মেনু টগল -->
+    <div class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
     </div>
 
     <!-- মূল কন্টেন্ট -->
     <div class="main-content">
-        <!-- টপ বার -->
-        <div class="top-bar">
-            <div class="page-title">
-                <h1><i class="fas fa-tv"></i> Live TV Dashboard</h1>
-            </div>
-            <div class="header-stats">
-                <div class="stat-card-mini">
-                    <i class="fas fa-circle live-dot"></i>
-                    <span id="liveUsers">128</span> লাইভ
+        <!-- ড্যাশবোর্ড পেজ -->
+        <div id="dashboardPage" class="page active">
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
                 </div>
-                <div class="stat-card-mini">
-                    <i class="fas fa-eye"></i>
-                    <span id="totalViews">8,923</span> ভিউ
+                <div class="header-stats">
+                    <div class="stat-card-mini"><i class="fas fa-circle live-dot"></i> <span id="liveUsersHeader">128</span> Live</div>
+                    <div class="stat-card-mini"><i class="fas fa-eye"></i> <span id="totalViewsHeader">8.9k</span> Views</div>
                 </div>
             </div>
-        </div>
-
-        <!-- প্লেয়ার কার্ড -->
-        <div class="player-card">
-            <div class="player-wrapper" id="playerWrapper">
-                <video id="myVideo" poster="https://via.placeholder.com/1280x720/1a1d2b/3b82f6?text=TAMIM+TV+LIVE">
-                    <source src="" type="application/x-mpegURL">
-                </video>
-                <div class="video-controls-overlay" id="videoControls">
-                    <div class="channel-name" id="channelNameOverlay">TAMIM TV</div>
-                    <div class="control-buttons">
-                        <button id="prevBtn"><i class="fas fa-step-backward"></i></button>
-                        <button id="playPauseBtn"><i class="fas fa-play"></i></button>
-                        <button id="nextBtn"><i class="fas fa-step-forward"></i></button>
-                        <button id="fullscreenBtn"><i class="fas fa-expand"></i></button>
-                        <button id="floatBtn"><i class="fas fa-window-restore"></i></button>
+            
+            <!-- স্ট্যাটস কার্ড -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-info">
+                        <h3 id="liveUsersStat">128</h3>
+                        <p>Live Users</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-eye"></i></div>
+                    <div class="stat-info">
+                        <h3 id="totalViewsStat">8,923</h3>
+                        <p>Total Views</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-tv"></i></div>
+                    <div class="stat-info">
+                        <h3 id="totalChannelsStat">0</h3>
+                        <p>Total Channels</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    <div class="stat-info">
+                        <h3 id="uptimeStat">24/7</h3>
+                        <p>Uptime</p>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- সার্চ বার (স্ক্রিনশটের ফিল্টারের মত) -->
-        <div class="filter-bar">
-            <div class="search-input-wrapper">
-                <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" placeholder="Filter channels...">
-                <button id="clearSearch"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="filter-badge">
-                <i class="fas fa-filter"></i> All Channels
+            <!-- সাম্প্রতিক চ্যানেল -->
+            <div class="recent-section">
+                <h3><i class="fas fa-history"></i> Recently Played</h3>
+                <div class="recent-list" id="recentList"></div>
             </div>
         </div>
 
-        <!-- ক্যাটাগরি বাটন (স্ক্রিনশটের ট্যাব সিস্টেমের মত) -->
-        <div class="category-tabs">
-            <button class="cat-tab active" data-cat="all"><i class="fas fa-th-large"></i> All</button>
-            <button class="cat-tab" data-cat="bangla"><i class="fas fa-newspaper"></i> Bangla News</button>
-            <button class="cat-tab" data-cat="indian"><i class="fas fa-film"></i> Indian Serial</button>
-            <button class="cat-tab" data-cat="sports"><i class="fas fa-futbol"></i> Sports</button>
-            <button class="cat-tab" data-cat="international"><i class="fas fa-globe"></i> International</button>
-            <button class="cat-tab" data-cat="entertainment"><i class="fas fa-music"></i> Entertainment</button>
-            <button class="cat-tab" data-cat="movies"><i class="fas fa-video"></i> Movies</button>
-            <button class="cat-tab" data-cat="news"><i class="fas fa-microphone-alt"></i> News</button>
-            <button class="cat-tab" data-cat="others"><i class="fas fa-ellipsis-h"></i> Others</button>
+        <!-- লাইভ টিভি পেজ -->
+        <div id="livePage" class="page">
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1><i class="fas fa-play-circle"></i> Live TV</h1>
+                </div>
+            </div>
+
+            <!-- প্লেয়ার -->
+            <div class="player-card">
+                <div class="player-wrapper" id="playerWrapper">
+                    <video id="myVideo" poster="https://via.placeholder.com/1280x720/1a1d2b/3b82f6?text=TAMIM+TV">
+                        <source src="" type="application/x-mpegURL">
+                    </video>
+                    <div class="video-controls-overlay" id="videoControls">
+                        <div class="channel-name" id="channelNameOverlay">TAMIM TV</div>
+                        <div class="control-buttons">
+                            <button id="prevBtn"><i class="fas fa-step-backward"></i></button>
+                            <button id="playPauseBtn"><i class="fas fa-play"></i></button>
+                            <button id="nextBtn"><i class="fas fa-step-forward"></i></button>
+                            <button id="fullscreenBtn"><i class="fas fa-expand"></i></button>
+                            <button id="floatBtn"><i class="fas fa-window-restore"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- সার্চ ও ক্যাটাগরি -->
+            <div class="filter-bar">
+                <div class="search-input-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search channels...">
+                    <button id="clearSearch"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+
+            <div class="category-tabs" id="categoryTabs">
+                <button class="cat-tab active" data-cat="all"><i class="fas fa-th-large"></i> All</button>
+                <button class="cat-tab" data-cat="bangla"><i class="fas fa-newspaper"></i> Bangla</button>
+                <button class="cat-tab" data-cat="indian"><i class="fas fa-film"></i> Indian</button>
+                <button class="cat-tab" data-cat="sports"><i class="fas fa-futbol"></i> Sports</button>
+                <button class="cat-tab" data-cat="international"><i class="fas fa-globe"></i> International</button>
+                <button class="cat-tab" data-cat="entertainment"><i class="fas fa-music"></i> Entertainment</button>
+                <button class="cat-tab" data-cat="movies"><i class="fas fa-video"></i> Movies</button>
+                <button class="cat-tab" data-cat="news"><i class="fas fa-microphone-alt"></i> News</button>
+                <button class="cat-tab" data-cat="others"><i class="fas fa-ellipsis-h"></i> Others</button>
+            </div>
+
+            <!-- চ্যানেল গ্রিড -->
+            <div class="channels-grid-container">
+                <div class="channels-header">
+                    <span><i class="fas fa-list"></i> Available Channels</span>
+                    <span class="channel-count" id="channelCount">0 channels</span>
+                </div>
+                <div class="channel-grid" id="channelList"></div>
+                <div class="loading" id="loading" style="display: none;">
+                    <i class="fas fa-spinner fa-spin"></i> Loading channels...
+                </div>
+            </div>
         </div>
 
-        <!-- চ্যানেল গ্রিড (স্ক্রিনশটের কী লিস্টের মত) -->
-        <div class="channels-grid-container">
-            <div class="channels-header">
-                <span><i class="fas fa-list"></i> Available Channels</span>
-                <span class="channel-count" id="channelCount">0 channels</span>
+        <!-- চ্যানেল ম্যানেজ পেজ -->
+        <div id="channelsPage" class="page">
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1><i class="fas fa-list-ul"></i> Channel Manager</h1>
+                </div>
             </div>
-            <div class="channel-grid" id="channelList"></div>
-            <div class="loading" id="loading" style="display: none;">
-                <i class="fas fa-spinner fa-spin"></i> Loading channels...
+            <div class="channels-manager">
+                <div class="manager-stats">
+                    <div class="manager-stat">Total: <span id="managerTotalChannels">0</span></div>
+                    <div class="manager-stat">Categories: 8</div>
+                </div>
+                <div class="channel-list-manager" id="channelManagerList"></div>
+            </div>
+        </div>
+
+        <!-- সেটিংস পেজ -->
+        <div id="settingsPage" class="page">
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1><i class="fas fa-cog"></i> Settings</h1>
+                </div>
+            </div>
+            <div class="settings-container">
+                <div class="settings-section">
+                    <h3><i class="fas fa-play-circle"></i> Player Settings</h3>
+                    <div class="setting-item">
+                        <label>Auto Play</label>
+                        <label class="switch">
+                            <input type="checkbox" id="autoPlayToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>Default Volume</label>
+                        <input type="range" id="volumeSlider" min="0" max="100" value="70">
+                        <span id="volumeValue">70%</span>
+                    </div>
+                    <div class="setting-item">
+                        <label>Video Quality</label>
+                        <select id="qualitySelect">
+                            <option value="auto">Auto</option>
+                            <option value="1080p">1080p</option>
+                            <option value="720p">720p</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3><i class="fas fa-palette"></i> Display Settings</h3>
+                    <div class="setting-item">
+                        <label>Dark Mode</label>
+                        <label class="switch">
+                            <input type="checkbox" id="darkModeToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>Glass Effect</label>
+                        <label class="switch">
+                            <input type="checkbox" id="glassEffectToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3><i class="fas fa-database"></i> Stream Settings</h3>
+                    <div class="setting-item">
+                        <label>M3U Playlist URL</label>
+                        <input type="text" id="m3uUrl" value="https://raw.githubusercontent.com/Rakib49/Rakibiptv/refs/heads/main/aynaott.m3u" class="url-input">
+                        <button id="updateM3U" class="setting-btn">Update</button>
+                    </div>
+                    <div class="setting-item">
+                        <label>Buffer Time (seconds)</label>
+                        <input type="number" id="bufferTime" min="0" max="10" value="2" step="0.5">
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3><i class="fas fa-info-circle"></i> About</h3>
+                    <p><strong>TAMIM TV</strong> v2.1.0</p>
+                    <p>Premium IPTV Dashboard with Glassmorphism UI</p>
+                    <p>© 2026 TAMIM TV</p>
+                </div>
             </div>
         </div>
 
@@ -127,4 +256,4 @@
 
     <script src="script.js"></script>
 </body>
-            </html>
+                                               </html>
