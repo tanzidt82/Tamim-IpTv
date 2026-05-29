@@ -1,4 +1,4 @@
-// =============== TAMIM TV v3.1 ===============
+// =============== TAMIM TV v3.2 - মেনু ঠিক করা ===============
 
 let channels = [];
 let currentChannelIndex = 0;
@@ -211,11 +211,9 @@ function handleDoubleClick(e) {
     const videoWidth = rect.width;
     
     if (clickX < videoWidth / 2) {
-        // বাম পাশে ক্লিক করলে ১০ সেকেন্ড পিছনে
         video.currentTime = Math.max(0, video.currentTime - 10);
         showTempMessage('⏪ -10 seconds');
     } else {
-        // ডান পাশে ক্লিক করলে ১০ সেকেন্ড সামনে
         video.currentTime = Math.min(video.duration, video.currentTime + 10);
         showTempMessage('+10 seconds ⏩');
     }
@@ -333,14 +331,29 @@ document.querySelectorAll('.cat-tab').forEach(btn => {
 document.querySelectorAll('.nav-item').forEach(nav => {
     nav.addEventListener('click', (e) => { e.preventDefault(); showPage(nav.dataset.page); });
 });
+
+// ========== মেনু টগল - এখানে ঠিক করা হয়েছে ==========
 if (menuToggle) {
-    menuToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+    menuToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        console.log('Menu clicked'); // ডিবাগ করার জন্য
+        sidebar.classList.toggle('open');
+    });
 }
-document.addEventListener('click', (e) => {
+
+// সাইডবারের বাইরে ক্লিক করলে বন্ধ হবে
+document.addEventListener('click', function(e) {
     if (window.innerWidth <= 768 && sidebar && sidebar.classList.contains('open')) {
         if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
             sidebar.classList.remove('open');
         }
+    }
+});
+
+// রেসপনসিভ: স্ক্রিন রিসাইজ হলে সাইডবার বন্ধ
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768 && sidebar) {
+        sidebar.classList.remove('open');
     }
 });
 
