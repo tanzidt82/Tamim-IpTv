@@ -1,4 +1,4 @@
-// =============== TAMIM TV v3.0 - সম্পূর্ণ ফাংশনাল ===============
+// =============== TAMIM TV v3.0 ===============
 
 let channels = [];
 let currentChannelIndex = 0;
@@ -10,14 +10,14 @@ let currentPlaylistUrl = 'https://raw.githubusercontent.com/Rakib49/Rakibiptv/re
 
 // ক্যাটাগরি ম্যাপিং
 const categoryMap = {
-    'bangla': ['সময়', 'চ্যানেল আই', 'এটিএন', 'এনটিভি', 'বিবিসি বাংলা', 'দীপ্ত', 'বাংলাভিশন', 'ইন্ডিপেন্ডেন্ট', 'বৈশাখী', 'আমার টিভি', 'দেখো'],
-    'indian': ['স্টার প্লাস', 'জি বাংলা', 'কালারস', 'সনি', 'এন্ড টিভি', 'ইমাজিন', 'স্টার জলসা', 'কালার্স', 'জি টিভি'],
-    'sports': ['স্পোর্টস', 'ক্রিকেট', 'ফুটবল', 'টি স্পোর্টস', 'ইএসপিএন', 'স্টার স্পোর্টস', 'টেন স্পোর্টস', 'স্পোর্টস ২৪'],
-    'international': ['সিএনএন', 'বিবিসি', 'স্কাই নিউজ', 'আল জাজিরা', 'এনবিসি', 'ফক্স', 'সিএনবিসি'],
-    'entertainment': ['মিউজিক', 'বিনোদন', 'গান', 'সঙ্গীত', 'ডিজে', 'রেডিও', 'এন্টারটেইনমেন্ট'],
+    'bangla': ['সময়', 'চ্যানেল আই', 'এটিএন', 'এনটিভি', 'বিবিসি বাংলা', 'দীপ্ত', 'বাংলাভিশন', 'বৈশাখী', 'আমার টিভি'],
+    'indian': ['স্টার প্লাস', 'জি বাংলা', 'কালারস', 'সনি', 'এন্ড টিভি', 'ইমাজিন', 'স্টার জলসা', 'জি টিভি'],
+    'sports': ['স্পোর্টস', 'ক্রিকেট', 'ফুটবল', 'টি স্পোর্টস', 'ইএসপিএন', 'স্টার স্পোর্টস'],
+    'international': ['সিএনএন', 'বিবিসি', 'স্কাই নিউজ', 'আল জাজিরা', 'এনবিসি', 'ফক্স'],
+    'entertainment': ['মিউজিক', 'বিনোদন', 'গান', 'সঙ্গীত', 'ডিজে', 'এন্টারটেইনমেন্ট'],
     'movies': ['সিনেমা', 'মুভি', 'হলিউড', 'বলিউড', 'ঢালিউড', 'ফিল্ম'],
-    'news': ['নিউজ', 'সংবাদ', 'বার্তা', 'আপডেট', 'ব্রেকিং', 'টক শো'],
-    'others': ['লাইফস্টাইল', 'ট্রাভেল', 'কিডস', 'ডকুমেন্টরি', 'শিক্ষা', 'স্বাস্থ্য']
+    'news': ['নিউজ', 'সংবাদ', 'বার্তা', 'ব্রেকিং'],
+    'others': ['লাইফস্টাইল', 'ট্রাভেল', 'কিডস', 'ডকুমেন্টরি']
 };
 
 // ডোম এলিমেন্টস
@@ -38,16 +38,16 @@ const playerWrapper = document.getElementById('playerWrapper');
 const sidebar = document.getElementById('sidebar');
 const menuToggle = document.getElementById('menuToggle');
 
-let totalViewsCount = 9156;
-let liveUsersCount = 137;
+let totalViewsCount = 8923;
+let liveUsersCount = 128;
 
 function updateStats() {
     liveUsersCount = Math.floor(Math.random() * (210 - 85 + 1) + 85);
     totalViewsCount += Math.floor(Math.random() * 25);
-    document.getElementById('liveUsersTop').innerText = liveUsersCount;
-    document.getElementById('liveUsersStat').innerText = liveUsersCount;
-    document.getElementById('totalViewsTop').innerText = (totalViewsCount/1000).toFixed(1) + 'k';
-    document.getElementById('totalViewsStat').innerText = totalViewsCount.toLocaleString();
+    const liveEl = document.getElementById('liveUsersStat');
+    const viewsEl = document.getElementById('totalViewsStat');
+    if (liveEl) liveEl.innerText = liveUsersCount;
+    if (viewsEl) viewsEl.innerText = totalViewsCount.toLocaleString();
 }
 setInterval(updateStats, 8000);
 updateStats();
@@ -85,8 +85,10 @@ async function loadChannels() {
         if (channels.length === 0) setBackupChannels();
         renderChannels();
         if (channels.length) playChannel(0);
-        document.getElementById('totalChannelsStat').innerText = channels.length;
-        document.getElementById('managerTotalChannels').innerText = channels.length;
+        const totalSpan = document.getElementById('totalChannelsStat');
+        const managerSpan = document.getElementById('managerTotalChannels');
+        if (totalSpan) totalSpan.innerText = channels.length;
+        if (managerSpan) managerSpan.innerText = channels.length;
     } catch(e) { setBackupChannels(); }
     loading.style.display = 'none';
 }
@@ -104,7 +106,6 @@ function setBackupChannels() {
     ];
     renderChannels();
     if (channels.length) playChannel(0);
-    document.getElementById('totalChannelsStat').innerText = channels.length;
 }
 
 function renderChannels() {
@@ -205,28 +206,19 @@ function togglePlay() {
     else { video.pause(); playPauseBtn.innerHTML = '<i class="fas fa-play"></i>'; }
 }
 
-function seekBack() {
-    video.currentTime = Math.max(0, video.currentTime - 10);
-}
-
-function seekForward() {
-    video.currentTime = Math.min(video.duration, video.currentTime + 10);
-}
-
+function seekBack() { video.currentTime = Math.max(0, video.currentTime - 10); }
+function seekForward() { video.currentTime = Math.min(video.duration, video.currentTime + 10); }
 function toggleFullscreen() {
     if (!document.fullscreenElement) playerWrapper.requestFullscreen().catch(e=>console.log);
     else document.exitFullscreen();
 }
 
-// 1.5 সেকেন্ডে কন্ট্রোল হাইড
 let hideTimeout;
 function showControls() {
     const controls = document.getElementById('videoControls');
     controls.classList.add('show');
     if (hideTimeout) clearTimeout(hideTimeout);
-    hideTimeout = setTimeout(() => {
-        controls.classList.remove('show');
-    }, 1500);
+    hideTimeout = setTimeout(() => controls.classList.remove('show'), 1500);
 }
 playerWrapper.addEventListener('click', showControls);
 playerWrapper.addEventListener('mousemove', showControls);
@@ -267,7 +259,7 @@ function showPage(pageId) {
     if (window.innerWidth <= 768 && sidebar) sidebar.classList.remove('open');
 }
 
-// সেটিংস ফাংশন
+// সেটিংস
 document.getElementById('volumeSlider')?.addEventListener('input', (e) => {
     video.volume = e.target.value / 100;
     document.getElementById('volumeValue').innerText = e.target.value + '%';
@@ -278,19 +270,11 @@ document.getElementById('darkModeToggle')?.addEventListener('change', (e) => {
 });
 document.getElementById('glassEffectToggle')?.addEventListener('change', (e) => {
     const cards = document.querySelectorAll('.stat-card, .player-card, .settings-section, .channels-container');
-    cards.forEach(c => {
-        c.style.backdropFilter = e.target.checked ? 'blur(10px)' : 'none';
-    });
+    cards.forEach(c => c.style.backdropFilter = e.target.checked ? 'blur(10px)' : 'none');
 });
 document.getElementById('updateM3U')?.addEventListener('click', () => {
     const newUrl = document.getElementById('m3uUrl').value;
-    if (newUrl) {
-        currentPlaylistUrl = newUrl;
-        loadChannels();
-    }
-});
-document.getElementById('qualitySelect')?.addEventListener('change', (e) => {
-    console.log('Quality selected:', e.target.value);
+    if (newUrl) { currentPlaylistUrl = newUrl; loadChannels(); }
 });
 
 // ইভেন্ট লিসেনার
@@ -300,8 +284,8 @@ prevBtn.addEventListener('click', prevChannel);
 seekBackBtn.addEventListener('click', seekBack);
 seekForwardBtn.addEventListener('click', seekForward);
 fullscreenBtn.addEventListener('click', toggleFullscreen);
-if (searchInput) searchInput.addEventListener('input', handleSearch);
-if (clearSearch) clearSearch.addEventListener('click', clearSearchInput);
+searchInput.addEventListener('input', handleSearch);
+clearSearch.addEventListener('click', clearSearchInput);
 video.addEventListener('play', () => playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>');
 video.addEventListener('pause', () => playPauseBtn.innerHTML = '<i class="fas fa-play"></i>');
 
