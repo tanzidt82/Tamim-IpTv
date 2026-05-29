@@ -1,67 +1,86 @@
 <!DOCTYPE html>
 <html lang="bn">
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>TAMIM TV | প্রিমিয়াম গ্লাসি আইপিটিভি</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Google Fonts: ডিজিটাল ফন্ট -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome 6 (ফ্রি আইকন) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
 <body>
     <div class="glass-bg"></div>
-    <div class="container">
-        <!-- হেডার: লোগো + গ্লাসি ইফেক্ট -->
-        <div class="header glass-card">
-            <div class="logo-area">
-                <div class="animated-logo">
-                    <i class="fas fa-tv"></i>
-                    <span>TAMIM</span>
-                </div>
-                <div class="logo-glow">TV</div>
+    
+    <!-- হেডার (স্ক্রল করলেও উপরে থাকবে) -->
+    <div class="header glass-card">
+        <div class="logo-area">
+            <div class="animated-logo">
+                <i class="fas fa-tv"></i>
+                <span>TAMIM</span>
             </div>
-            <div class="stats">
-                <div class="stat-item">
-                    <i class="fas fa-circle live-dot"></i>
-                    <span id="liveUsers">128</span> লাইভ
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-eye"></i>
-                    <span id="totalViews">8923</span> ভিউ
-                </div>
+            <div class="logo-glow">TV</div>
+        </div>
+        <div class="stats">
+            <div class="stat-item">
+                <i class="fas fa-circle live-dot"></i>
+                <span id="liveUsers">128</span> লাইভ
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-eye"></i>
+                <span id="totalViews">8923</span> ভিউ
             </div>
         </div>
+    </div>
 
-        <!-- ভিডিও প্লেয়ার (গ্লাসি + প্রিমিয়াম) -->
-        <div class="player-wrapper glass-card">
-            <video id="myVideo" poster="https://via.placeholder.com/1280x720/1a1a2e/ffffff?text=TAMIM+TV+LIVE" controls>
-                <source src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" type="application/x-mpegURL">
+    <!-- ভিডিও প্লেয়ার সেকশন -->
+    <div class="player-section">
+        <div class="player-wrapper glass-card" id="playerWrapper">
+            <video id="myVideo" poster="https://via.placeholder.com/1280x720/1a1a2e/ffffff?text=TAMIM+TV+LIVE">
+                <source src="" type="application/x-mpegURL">
                 আপনার ব্রাউজার ভিডিও সাপোর্ট করে না।
             </video>
-            <div class="player-controls-overlay">
-                <button id="playPauseBtn"><i class="fas fa-play"></i></button>
-                <button id="nextBtn"><i class="fas fa-step-forward"></i></button>
+            
+            <!-- ভিডিও কন্ট্রোল ওভারলে (ট্যাপ করলে শো/হাইড) -->
+            <div class="video-controls-overlay" id="videoControls">
+                <div class="channel-name-overlay" id="channelNameOverlay">TAMIM TV</div>
+                <div class="control-buttons">
+                    <button id="prevBtn"><i class="fas fa-backward"></i></button>
+                    <button id="playPauseBtn"><i class="fas fa-play"></i></button>
+                    <button id="nextBtn"><i class="fas fa-forward"></i></button>
+                    <button id="fullscreenBtn"><i class="fas fa-expand"></i></button>
+                    <button id="floatBtn"><i class="fas fa-window-restore"></i></button>
+                </div>
             </div>
         </div>
+    </div>
 
-        <!-- চ্যানেল লিস্ট (গ্লাসি কার্ড) -->
-        <div class="channels-section glass-card">
-            <h3><i class="fas fa-list-ul"></i> প্রিমিয়াম চ্যানেল</h3>
-            <div class="channel-grid" id="channelList">
-                <!-- ডায়নামিক জাভাস্ক্রিপ্ট দিয়ে ঢুকানো হবে -->
-            </div>
+    <!-- মেনু বাটন (৩ লাইন) ও ক্যাটাগরি -->
+    <div class="menu-container">
+        <div class="menu-toggle glass-card" id="menuToggle">
+            <i class="fas fa-bars"></i> মেনু
         </div>
+        <div class="category-menu" id="categoryMenu">
+            <button class="category-btn active" data-cat="all"><i class="fas fa-th-large"></i> সব</button>
+            <button class="category-btn" data-cat="bangla"><i class="fas fa-newspaper"></i> বাংলা নিউজ</button>
+            <button class="category-btn" data-cat="indian"><i class="fas fa-film"></i> ইন্ডিয়ান সিরিয়াল</button>
+            <button class="category-btn" data-cat="sports"><i class="fas fa-futbol"></i> স্পোর্টস</button>
+            <button class="category-btn" data-cat="international"><i class="fas fa-globe"></i> ইন্টারন্যাশনাল</button>
+            <button class="category-btn" data-cat="others"><i class="fas fa-ellipsis-h"></i> অন্যান্য</button>
+        </div>
+    </div>
 
-        <!-- ফুটার + ফিডব্যাক -->
-        <div class="footer glass-card">
-            <p>আমার টিভি সম্পর্কে মতামত জানাতে: <i class="fas fa-envelope"></i> tamimtv@glassy.com</p>
-            <p>© 2026 TAMIM TV | প্রিমিয়াম গ্লাসি ডিজাইন</p>
-        </div>
+    <!-- চ্যানেল গ্রিড -->
+    <div class="channels-section">
+        <div class="channel-grid" id="channelList"></div>
+    </div>
+
+    <!-- ফুটার -->
+    <div class="footer glass-card">
+        <p>আমার টিভি সম্পর্কে মতামত জানাতে: <i class="fas fa-envelope"></i> tamimtv@glassy.com</p>
+        <p>© 2026 TAMIM TV | প্রিমিয়াম গ্লাসি ডিজাইন</p>
     </div>
 
     <script src="script.js"></script>
 </body>
-</html>
+                                                   </html>
