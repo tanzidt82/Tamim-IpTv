@@ -1,4 +1,4 @@
-// =============== TAMIM TV v2.1 - সম্পূর্ণ ফাংশনাল ===============
+// =============== TAMIM TV v2.2 - মেনু ও ক্যাটাগরি ঠিক করা ===============
 
 let channels = [];
 let currentChannelIndex = 0;
@@ -37,6 +37,8 @@ const loading = document.getElementById('loading');
 const channelCountSpan = document.getElementById('channelCount');
 const channelNameOverlay = document.getElementById('channelNameOverlay');
 const playerWrapper = document.getElementById('playerWrapper');
+const sidebar = document.getElementById('sidebar');
+const mobileMenuToggle = document.getElementById('mobileMenuToggle');
 
 // স্ট্যাটস এলিমেন্টস
 const liveUsersSpans = ['liveUsersMini', 'liveUsersHeader', 'liveUsersStat'];
@@ -93,8 +95,10 @@ async function loadChannels() {
         if (channels.length === 0) setBackupChannels();
         renderChannels();
         if (channels.length) playChannel(0);
-        document.getElementById('totalChannelsStat').innerText = channels.length;
-        document.getElementById('managerTotalChannels').innerText = channels.length;
+        const totalChannelsSpan = document.getElementById('totalChannelsStat');
+        if (totalChannelsSpan) totalChannelsSpan.innerText = channels.length;
+        const managerTotal = document.getElementById('managerTotalChannels');
+        if (managerTotal) managerTotal.innerText = channels.length;
     } catch(e) { setBackupChannels(); }
     loading.style.display = 'none';
 }
@@ -112,18 +116,21 @@ function setBackupChannels() {
     ];
     renderChannels();
     if (channels.length) playChannel(0);
-    document.getElementById('totalChannelsStat').innerText = channels.length;
+    const totalChannelsSpan = document.getElementById('totalChannelsStat');
+    if (totalChannelsSpan) totalChannelsSpan.innerText = channels.length;
 }
 
 function renderChannels() {
     if (!channelListDiv) return;
     let filtered = channels;
-    if (currentCategory !== 'all') filtered = filtered.filter(ch => ch.category === currentCategory);
+    if (currentCategory !== 'all') {
+        filtered = filtered.filter(ch => ch.category === currentCategory);
+    }
     if (currentSearchTerm.trim()) {
         const s = currentSearchTerm.toLowerCase();
         filtered = filtered.filter(ch => ch.name.toLowerCase().includes(s));
     }
-    channelCountSpan.innerText = filtered.length + ' channels';
+    if (channelCountSpan) channelCountSpan.innerText = filtered.length + ' channels';
     if (filtered.length === 0) {
         channelListDiv.innerHTML = '<div class="no-results"><i class="fas fa-search"></i> No channels found</div>';
         return;
@@ -134,8 +141,11 @@ function renderChannels() {
         const card = document.createElement('div');
         card.className = 'channel-card';
         if (origIdx === currentChannelIndex) card.classList.add('active');
-        if (ch.logo) card.innerHTML = `<img src="${ch.logo}" onerror="this.src='https://via.placeholder.com/30/3b82f6?text=TV'"><span>${ch.name.substring(0, 22)}</span>`;
-        else card.innerHTML = `<i class="fas fa-tv"></i><span>${ch.name.substring(0, 22)}</span>`;
+        if (ch.logo && ch.logo !== '') {
+            card.innerHTML = `<img src="${ch.logo}" onerror="this.src='https://via.placeholder.com/30/3b82f6?text=TV'"><span>${ch.name.substring(0, 22)}</span>`;
+        } else {
+            card.innerHTML = `<i class="fas fa-tv"></i><span>${ch.name.substring(0, 22)}</span>`;
+        }
         card.onclick = () => playChannel(origIdx);
         channelListDiv.appendChild(card);
     });
@@ -145,19 +155,23 @@ function playChannel(index) {
     if (!channels[index]) return;
     currentChannelIndex = index;
     const ch = channels[index];
-    channelNameOverlay.innerText = ch.name;
+    if (channelNameOverlay) channelNameOverlay.innerText = ch.name;
     if (window.hls) window.hls.destroy();
     if (Hls && Hls.isSupported()) {
         const hls = new Hls({ manifestLoadingTimeOut: 10000, manifestLoadingMaxRetry: 3 });
         hls.loadSource(ch.url);
         hls.attachMedia(video);
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
-            if (document.getElementById('autoPlayToggle')?.checked) video.play().catch(e=>console.log);
+            const autoPlay = document.getElementById('autoPlayToggle');
+            if (autoPlay && autoPlay.checked) video.play().catch(e=>console.log);
+            else if (!autoPlay) video.play().catch(e=>console.log);
         });
         window.hls = hls;
     } else {
         video.src = ch.url;
-        if (document.getElementById('autoPlayToggle')?.checked) video.play().catch(e=>console.log);
+        const autoPlay = document.getElementById('autoPlayToggle');
+        if (autoPlay && autoPlay.checked) video.play().catch(e=>console.log);
+        else if (!autoPlay) video.play().catch(e=>console.log);
     }
     renderChannels();
     updateRecentChannels(ch.name);
@@ -182,7 +196,10 @@ function renderRecentList() {
             const item = document.createElement('div');
             item.className = 'recent-item';
             item.innerText = name.length > 20 ? name.substring(0, 18) + '..' : name;
-            item.onclick = () => playChannel(idx);
+            item.onclick = () => {
+                showPage('live');
+                playChannel(idx);
+            };
             container.appendChild(item);
         }
     });
@@ -282,20 +299,33 @@ function setCategory(cat) {
         if (btn.dataset.cat === cat) btn.classList.add('active');
         else btn.classList.remove('active');
     });
+    // মোবাইলে ক্যাটাগরি সিলেক্ট করার পর সাইডবার বন্ধ
+    if (window.innerWidth <= 768 && sidebar) {
+        sidebar.classList.remove('open');
+    }
 }
 
 function handleSearch() { currentSearchTerm = searchInput.value; renderChannels(); }
 function clearSearchInput() { searchInput.value = ''; currentSearchTerm = ''; renderChannels(); }
-function toggleControls() { document.getElementById('videoControls').classList.toggle('show'); }
+function toggleControls() { 
+    const controls = document.getElementById('videoControls');
+    if (controls) controls.classList.toggle('show');
+}
 
 // পেজ নেভিগেশন
 function showPage(pageId) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(pageId + 'Page').classList.add('active');
+    const targetPage = document.getElementById(pageId + 'Page');
+    if (targetPage) targetPage.classList.add('active');
     document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-    document.querySelector(`.nav-item[data-page="${pageId}"]`).classList.add('active');
+    const activeNav = document.querySelector(`.nav-item[data-page="${pageId}"]`);
+    if (activeNav) activeNav.classList.add('active');
     if (pageId === 'channels') renderChannelManager();
     if (pageId === 'live' && channels.length === 0) loadChannels();
+    // মোবাইলে পেজ চেঞ্জ করলে সাইডবার বন্ধ
+    if (window.innerWidth <= 768 && sidebar) {
+        sidebar.classList.remove('open');
+    }
 }
 
 function renderChannelManager() {
@@ -311,48 +341,125 @@ function renderChannelManager() {
     });
 }
 
-// সেটিংস ফাংশন
-document.getElementById('volumeSlider')?.addEventListener('input', (e) => {
-    video.volume = e.target.value / 100;
-    document.getElementById('volumeValue').innerText = e.target.value + '%';
-});
-document.getElementById('darkModeToggle')?.addEventListener('change', (e) => {
-    if (!e.target.checked) document.body.style.background = '#f0f2f5';
-    else document.body.style.background = '#0a0c12';
-});
-document.getElementById('glassEffectToggle')?.addEventListener('change', (e) => {
-    const cards = document.querySelectorAll('.glass-card, .stat-card, .player-card, .settings-section, .channels-grid-container');
-    cards.forEach(c => c.style.backdropFilter = e.target.checked ? 'blur(12px)' : 'none');
-});
-document.getElementById('updateM3U')?.addEventListener('click', () => {
-    currentPlaylistUrl = document.getElementById('m3uUrl').value;
-    loadChannels();
-});
-document.getElementById('autoPlayToggle')?.addEventListener('change', (e) => {
-    if (e.target.checked && video.paused && channels.length) video.play().catch(e=>console.log);
+// ========== সেটিংস ফাংশন ==========
+const volumeSlider = document.getElementById('volumeSlider');
+if (volumeSlider) {
+    volumeSlider.addEventListener('input', (e) => {
+        video.volume = e.target.value / 100;
+        const volumeValue = document.getElementById('volumeValue');
+        if (volumeValue) volumeValue.innerText = e.target.value + '%';
+    });
+}
+
+const darkModeToggle = document.getElementById('darkModeToggle');
+if (darkModeToggle) {
+    darkModeToggle.addEventListener('change', (e) => {
+        if (!e.target.checked) document.body.style.background = '#f0f2f5';
+        else document.body.style.background = '#0a0c12';
+    });
+}
+
+const glassEffectToggle = document.getElementById('glassEffectToggle');
+if (glassEffectToggle) {
+    glassEffectToggle.addEventListener('change', (e) => {
+        const cards = document.querySelectorAll('.stat-card, .player-card, .settings-section, .channels-grid-container');
+        cards.forEach(c => {
+            c.style.backdropFilter = e.target.checked ? 'blur(12px)' : 'none';
+        });
+    });
+}
+
+const updateM3UBtn = document.getElementById('updateM3U');
+if (updateM3UBtn) {
+    updateM3UBtn.addEventListener('click', () => {
+        const m3uUrlInput = document.getElementById('m3uUrl');
+        if (m3uUrlInput) {
+            currentPlaylistUrl = m3uUrlInput.value;
+            loadChannels();
+        }
+    });
+}
+
+const autoPlayToggle = document.getElementById('autoPlayToggle');
+if (autoPlayToggle) {
+    autoPlayToggle.addEventListener('change', (e) => {
+        if (e.target.checked && video.paused && channels.length) {
+            video.play().catch(e=>console.log);
+        }
+    });
+}
+
+const bufferTimeInput = document.getElementById('bufferTime');
+if (bufferTimeInput) {
+    bufferTimeInput.addEventListener('change', (e) => {
+        const bufferTime = parseFloat(e.target.value) || 2;
+        if (window.hls) {
+            window.hls.config.manifestLoadingTimeOut = bufferTime * 5000;
+        }
+    });
+}
+
+// ========== মোবাইল মেনু টগল ==========
+if (mobileMenuToggle) {
+    mobileMenuToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (sidebar) sidebar.classList.toggle('open');
+    });
+}
+
+// সাইডবারের বাইরে ক্লিক করলে বন্ধ
+document.addEventListener('click', (e) => {
+    if (window.innerWidth <= 768 && sidebar && sidebar.classList.contains('open')) {
+        if (!sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+            sidebar.classList.remove('open');
+        }
+    }
 });
 
-// ইভেন্ট লিসেনার
+// ========== ইভেন্ট লিসেনার ==========
 playPauseBtn.addEventListener('click', togglePlay);
 nextBtn.addEventListener('click', nextChannel);
 prevBtn.addEventListener('click', prevChannel);
 fullscreenBtn.addEventListener('click', toggleFullscreen);
 floatBtn.addEventListener('click', toggleFloating);
 playerWrapper.addEventListener('click', toggleControls);
-searchInput.addEventListener('input', handleSearch);
-clearSearch.addEventListener('click', clearSearchInput);
-video.addEventListener('play', () => playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>');
-video.addEventListener('pause', () => playPauseBtn.innerHTML = '<i class="fas fa-play"></i>');
-document.querySelectorAll('.cat-tab').forEach(btn => btn.addEventListener('click', () => setCategory(btn.dataset.cat)));
-document.querySelectorAll('.nav-item').forEach(nav => nav.addEventListener('click', (e) => {
-    e.preventDefault();
-    showPage(nav.dataset.page);
-}));
-document.getElementById('mobileMenuToggle')?.addEventListener('click', () => {
-    document.getElementById('sidebar').classList.toggle('open');
+if (searchInput) searchInput.addEventListener('input', handleSearch);
+if (clearSearch) clearSearch.addEventListener('click', clearSearchInput);
+
+video.addEventListener('play', () => {
+    if (playPauseBtn) playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+});
+video.addEventListener('pause', () => {
+    if (playPauseBtn) playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
 });
 
-// স্টার্ট
-if (typeof Hls !== 'undefined') loadChannels();
-else setTimeout(() => { if (typeof Hls !== 'undefined') loadChannels(); else setBackupChannels(); }, 1000);
+// ক্যাটাগরি বাটন ইভেন্ট
+document.querySelectorAll('.cat-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+        setCategory(btn.dataset.cat);
+    });
+});
+
+// নেভিগেশন ইভেন্ট
+document.querySelectorAll('.nav-item').forEach(nav => {
+    nav.addEventListener('click', (e) => {
+        e.preventDefault();
+        showPage(nav.dataset.page);
+    });
+});
+
+// ========== স্টার্ট ==========
+if (typeof Hls !== 'undefined') {
+    loadChannels();
+} else {
+    setTimeout(() => { 
+        if (typeof Hls !== 'undefined') loadChannels(); 
+        else setBackupChannels(); 
+    }, 1000);
+}
+
 video.volume = 0.7;
+
+// ডিফল্ট ভলিউম দেখানো
+const volumeValueSpan = document.getElementById('volumeValue');
+if (volumeValueSpan) volumeValueSpan.innerText = '70%';
