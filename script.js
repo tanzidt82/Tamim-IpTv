@@ -1,4 +1,4 @@
-// =============== TAMIM TV v3.0 ===============
+// =============== TAMIM TV v3.1 ===============
 
 let channels = [];
 let currentChannelIndex = 0;
@@ -10,7 +10,7 @@ let currentPlaylistUrl = 'https://raw.githubusercontent.com/Rakib49/Rakibiptv/re
 
 // ক্যাটাগরি ম্যাপিং
 const categoryMap = {
-    'bangla': ['সময়', 'চ্যানেল আই', 'এটিএন', 'এনটিভি', 'বিবিসি বাংলা', 'দীপ্ত', 'বাংলাভিশন', 'বৈশাখী', 'আমার টিভি'],
+    'bangla': ['সময়', 'চ্যানেল আই', 'এটিএন', 'এনটিভি', 'বিবিসি বাংলা', 'দীপ্ত', 'বাংলাভিশন', 'বৈশাখী', 'আমার টিভি', 'দেখো'],
     'indian': ['স্টার প্লাস', 'জি বাংলা', 'কালারস', 'সনি', 'এন্ড টিভি', 'ইমাজিন', 'স্টার জলসা', 'জি টিভি'],
     'sports': ['স্পোর্টস', 'ক্রিকেট', 'ফুটবল', 'টি স্পোর্টস', 'ইএসপিএন', 'স্টার স্পোর্টস'],
     'international': ['সিএনএন', 'বিবিসি', 'স্কাই নিউজ', 'আল জাজিরা', 'এনবিসি', 'ফক্স'],
@@ -25,8 +25,6 @@ const video = document.getElementById('myVideo');
 const playPauseBtn = document.getElementById('playPauseBtn');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
-const seekBackBtn = document.getElementById('seekBackBtn');
-const seekForwardBtn = document.getElementById('seekForwardBtn');
 const fullscreenBtn = document.getElementById('fullscreenBtn');
 const channelListDiv = document.getElementById('channelList');
 const searchInput = document.getElementById('searchInput');
@@ -38,8 +36,8 @@ const playerWrapper = document.getElementById('playerWrapper');
 const sidebar = document.getElementById('sidebar');
 const menuToggle = document.getElementById('menuToggle');
 
-let totalViewsCount = 8923;
-let liveUsersCount = 128;
+let totalViewsCount = 9061;
+let liveUsersCount = 103;
 
 function updateStats() {
     liveUsersCount = Math.floor(Math.random() * (210 - 85 + 1) + 85);
@@ -206,13 +204,56 @@ function togglePlay() {
     else { video.pause(); playPauseBtn.innerHTML = '<i class="fas fa-play"></i>'; }
 }
 
-function seekBack() { video.currentTime = Math.max(0, video.currentTime - 10); }
-function seekForward() { video.currentTime = Math.min(video.duration, video.currentTime + 10); }
+// ডাবল ক্লিক করে ১০ সেকেন্ড আগে/পিছনে
+function handleDoubleClick(e) {
+    const rect = video.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const videoWidth = rect.width;
+    
+    if (clickX < videoWidth / 2) {
+        // বাম পাশে ক্লিক করলে ১০ সেকেন্ড পিছনে
+        video.currentTime = Math.max(0, video.currentTime - 10);
+        showTempMessage('⏪ -10 seconds');
+    } else {
+        // ডান পাশে ক্লিক করলে ১০ সেকেন্ড সামনে
+        video.currentTime = Math.min(video.duration, video.currentTime + 10);
+        showTempMessage('+10 seconds ⏩');
+    }
+}
+
+function showTempMessage(msg) {
+    let msgDiv = document.getElementById('tempMessage');
+    if (!msgDiv) {
+        msgDiv = document.createElement('div');
+        msgDiv.id = 'tempMessage';
+        msgDiv.style.position = 'fixed';
+        msgDiv.style.bottom = '100px';
+        msgDiv.style.left = '50%';
+        msgDiv.style.transform = 'translateX(-50%)';
+        msgDiv.style.background = 'rgba(0,0,0,0.8)';
+        msgDiv.style.color = '#3b82f6';
+        msgDiv.style.padding = '8px 20px';
+        msgDiv.style.borderRadius = '30px';
+        msgDiv.style.fontSize = '0.9rem';
+        msgDiv.style.zIndex = '1000';
+        msgDiv.style.fontWeight = 'bold';
+        document.body.appendChild(msgDiv);
+    }
+    msgDiv.innerText = msg;
+    msgDiv.style.display = 'block';
+    setTimeout(() => {
+        msgDiv.style.display = 'none';
+    }, 1000);
+}
+
+video.addEventListener('dblclick', handleDoubleClick);
+
 function toggleFullscreen() {
     if (!document.fullscreenElement) playerWrapper.requestFullscreen().catch(e=>console.log);
     else document.exitFullscreen();
 }
 
+// 1.5 সেকেন্ডে কন্ট্রোল হাইড
 let hideTimeout;
 function showControls() {
     const controls = document.getElementById('videoControls');
@@ -272,17 +313,14 @@ document.getElementById('glassEffectToggle')?.addEventListener('change', (e) => 
     const cards = document.querySelectorAll('.stat-card, .player-card, .settings-section, .channels-container');
     cards.forEach(c => c.style.backdropFilter = e.target.checked ? 'blur(10px)' : 'none');
 });
-document.getElementById('updateM3U')?.addEventListener('click', () => {
-    const newUrl = document.getElementById('m3uUrl').value;
-    if (newUrl) { currentPlaylistUrl = newUrl; loadChannels(); }
+document.getElementById('qualitySelect')?.addEventListener('change', (e) => {
+    console.log('Quality selected:', e.target.value);
 });
 
 // ইভেন্ট লিসেনার
 playPauseBtn.addEventListener('click', togglePlay);
 nextBtn.addEventListener('click', nextChannel);
 prevBtn.addEventListener('click', prevChannel);
-seekBackBtn.addEventListener('click', seekBack);
-seekForwardBtn.addEventListener('click', seekForward);
 fullscreenBtn.addEventListener('click', toggleFullscreen);
 searchInput.addEventListener('input', handleSearch);
 clearSearch.addEventListener('click', clearSearchInput);
